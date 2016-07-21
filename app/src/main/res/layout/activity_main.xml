@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.khoahoang.simplemathbraintrainer.MainActivity"
+    android:background="#f3c281"
+    android:textAlignment="center">
+
+    <TextView
+        android:layout_width="80dp"
+        android:layout_height="70dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/timer"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:paddingTop="15dp"
+        android:textSize="30sp"
+        android:textAlignment="center"
+        android:background="#fce810" />
+
+    <TextView
+        android:layout_width="80dp"
+        android:layout_height="70dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/progress"
+        android:paddingTop="20dp"
+        android:textSize="25sp"
+        android:textAlignment="center"
+        android:background="#f67518"
+        android:layout_alignTop="@+id/timer"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="70dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/problem"
+        android:textAlignment="center"
+        android:textSize="40sp"
+        android:paddingTop="5dp"
+        android:textStyle="bold"
+        android:layout_below="@+id/timer"
+        android:layout_centerHorizontal="true"
+        android:textColor="#0d0101" />
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:rowCount="2"
+        android:id="@+id/choices"
+        android:layout_below="@+id/problem"
+        android:layout_centerHorizontal="true">
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/c1"
+            android:layout_row="0"
+            android:layout_column="0"
+            android:textAlignment="center"
+            android:textSize="70sp"
+            android:paddingTop="12dp"
+            android:background="#1146f5"
+            android:onClick="processChoice" />
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/c2"
+            android:layout_below="@+id/choices"
+            android:layout_alignLeft="@+id/choices"
+            android:layout_alignStart="@+id/choices"
+            android:textAlignment="center"
+            android:textSize="70sp"
+            android:paddingTop="12dp"
+            android:background="#27e819"
+            android:onClick="processChoice" />
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/c3"
+            android:layout_above="@+id/c2"
+            android:layout_toRightOf="@+id/choices"
+            android:layout_toEndOf="@+id/choices"
+            android:textSize="70sp"
+            android:textAlignment="center"
+            android:paddingTop="12dp"
+            android:background="#c725e4"
+            android:onClick="processChoice" />
+
+        <TextView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/c4"
+            android:layout_below="@+id/c3"
+            android:layout_alignRight="@+id/c3"
+            android:layout_alignEnd="@+id/c3"
+            android:textAlignment="center"
+            android:textSize="70sp"
+            android:paddingTop="12dp"
+            android:background="#f34646"
+            android:onClick="processChoice" />
+    </GridLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/rightOrWrong"
+        android:textSize="30dp"
+        android:layout_alignTop="@+id/result"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="0dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/result"
+        android:layout_below="@+id/choices"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:textSize="30sp"
+        android:paddingBottom="10dp"
+        android:autoText="false" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="PLAY AGAIN"
+        android:id="@+id/playAgain"
+        android:visibility="invisible"
+        android:layout_below="@+id/result"
+        android:layout_alignLeft="@+id/problem"
+        android:layout_alignStart="@+id/problem" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="QUIT"
+        android:id="@+id/quit"
+        android:visibility="invisible"
+        android:layout_below="@+id/result"
+        android:layout_toLeftOf="@+id/progress"
+        android:layout_toStartOf="@+id/progress" />
+
+</RelativeLayout>
