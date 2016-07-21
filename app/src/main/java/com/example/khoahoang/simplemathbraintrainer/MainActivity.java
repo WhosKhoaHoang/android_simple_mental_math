@@ -6,30 +6,26 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-
-//. Generate a new problem, display rightOrWrong, update genAns, and update progress with every click of a choice
-//TODO:
+//TODO: Allow user to quit.
 public class MainActivity extends AppCompatActivity {
 
     CountDownTimer clock;
     List<Integer> candAnswers;
-    TextView problem, progress, rightOrWrong, result, c1, c2, c3, c4;
+    TextView problem, progress, rightOrWrong, result, gameState, c1, c2, c3, c4;
     Button playAgain, quit;
     int answer, probsDone, numWrong;
+    int startingMillis = 15000; //change back to 15000.
     int totalProbs = 5;
     boolean gameActive = true;
 
     public void processChoice(View view) {
-        //Increment probsDone and set the progress TextView.
         if (gameActive) {
             int userAns = Integer.parseInt(((TextView) (view)).getText().toString());
-            //System.out.println(userAns);
             if (userAns == answer) {
                 rightOrWrong.setText("RIGHT");
             } else {
@@ -41,9 +37,8 @@ public class MainActivity extends AppCompatActivity {
             progress.setText(Integer.toString(probsDone) + "/" + Integer.toString(totalProbs));
             if (probsDone == totalProbs) {
                 gameActive = false;
-                rightOrWrong.setVisibility(View.INVISIBLE);
-                result.setText("SCORE: " + Integer.toString((totalProbs-numWrong)) + "/" + Integer.toString(totalProbs));
-                playAgain.setVisibility(View.VISIBLE); quit.setVisibility(View.VISIBLE);
+                gameState.setText("GAME OVER");
+                displayResult();
                 clock.cancel();
             } else {
                 genNewProblem();
@@ -52,16 +47,46 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void processPlayAgain(View view) {
+        gameState.setText("");
+        result.setText("");
+
+        final TextView timer = (TextView)findViewById(R.id.timer);
+        clock = new CountDownTimer(startingMillis+100, 1000) { //+100 to fix the delay
+
+            @Override
+            public void onTick(long l) {
+                timer.setText(Long.toString(l/1000) + "s");
+                //You're going down to the proper number of seconds because of how l/1000 rounds down.
+            }
+
+            @Override
+            public void onFinish() {
+                timer.setText("0s");
+                gameActive = false;
+                gameState.setText("TIME UP");
+                displayResult();
+            }
+        }.start();
+
+        probsDone = 0;
+        numWrong = 0;
+        gameActive = true;
+        progress.setText(Integer.toString(probsDone) + "/" + Integer.toString(totalProbs));
+        genNewProblem();
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final TextView timer = (TextView)findViewById(R.id.timer);
         problem = (TextView)findViewById(R.id.problem);
         progress = (TextView)findViewById(R.id.progress);
         rightOrWrong = (TextView)findViewById(R.id.rightOrWrong);
         result = (TextView)findViewById(R.id.result);
+        gameState = (TextView)findViewById(R.id.gameState);
         playAgain = (Button)findViewById(R.id.playAgain);
         quit = (Button)findViewById(R.id.quit);
         probsDone = 0;
@@ -70,20 +95,21 @@ public class MainActivity extends AppCompatActivity {
         c3 = (TextView)findViewById(R.id.c3);
         c4 = (TextView)findViewById(R.id.c4);
 
-        clock = new CountDownTimer(16000, 500) {
+        final TextView timer = (TextView)findViewById(R.id.timer);
+        clock = new CountDownTimer(startingMillis+100, 1000) { //+100 to fix the delay
 
             @Override
             public void onTick(long l) {
-                //. Update the timer
                 timer.setText(Long.toString(l/1000) + "s");
                 //You're going down to the proper number of seconds because of how l/1000 rounds down.
             }
 
             @Override
             public void onFinish() {
-                //. Make everything unclickable (so you should add a gameActive boolean variable or something).
-                //. Display result
                 timer.setText("0s");
+                gameActive = false;
+                gameState.setText("TIME UP");
+                displayResult();
             }
 
         }.start();
@@ -92,6 +118,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Generates a new problem to be displayed
+     */
     public void genNewProblem() {
         int o1 = (int)(Math.random()*10);
         int o2 = (int)(Math.random()*10);
@@ -110,6 +139,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Generates a set of candidate answers for a problem
+     * @param answer The answer to the problem
+     * @param candRadius Defines the range in which candidate answers will vary
+     * @return A list of candidate answers
+     */
     public List<Integer> genCandAnswers(int answer, int candRadius) {
         int cand;
         Random rand = new Random();
@@ -125,4 +160,17 @@ public class MainActivity extends AppCompatActivity {
 
         return candAnswers;
     }
+
+
+    /**
+     * Displays the results of a session
+     */
+    public void displayResult() {
+        rightOrWrong.setText("");
+        result.setText("SCORE: " + Integer.toString((totalProbs-numWrong)) + "/" + Integer.toString(totalProbs));
+        playAgain.setVisibility(View.VISIBLE); quit.setVisibility(View.VISIBLE);
+    }
 }
+
+
+
