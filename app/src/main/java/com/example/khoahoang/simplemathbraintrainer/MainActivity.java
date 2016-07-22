@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,11 +18,40 @@ public class MainActivity extends AppCompatActivity {
     CountDownTimer clock;
     List<Integer> candAnswers;
     TextView problem, progress, rightOrWrong, result, gameState, c1, c2, c3, c4;
+    RelativeLayout gameRelativeLayout;
     Button playAgain, quit;
     int answer, probsDone, numWrong;
     int startingMillis = 15000; //change back to 15000.
     int totalProbs = 5;
     boolean gameActive = true;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        gameRelativeLayout = (RelativeLayout)findViewById(R.id.gameRelativeLayout);
+        problem = (TextView)findViewById(R.id.problem);
+        progress = (TextView)findViewById(R.id.progress);
+        rightOrWrong = (TextView)findViewById(R.id.rightOrWrong);
+        result = (TextView)findViewById(R.id.result);
+        gameState = (TextView)findViewById(R.id.gameState);
+        playAgain = (Button)findViewById(R.id.playAgain);
+        quit = (Button)findViewById(R.id.quit);
+        c1 = (TextView)findViewById(R.id.c1);
+        c2 = (TextView)findViewById(R.id.c2);
+        c3 = (TextView)findViewById(R.id.c3);
+        c4 = (TextView)findViewById(R.id.c4);
+    }
+
+
+    public void processStart(View view) {
+        view.setVisibility(View.INVISIBLE);
+        gameRelativeLayout.setVisibility(View.VISIBLE);
+        processPlayAgain(playAgain);
+    }
+
 
     public void processChoice(View view) {
         if (gameActive) {
@@ -77,47 +107,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        problem = (TextView)findViewById(R.id.problem);
-        progress = (TextView)findViewById(R.id.progress);
-        rightOrWrong = (TextView)findViewById(R.id.rightOrWrong);
-        result = (TextView)findViewById(R.id.result);
-        gameState = (TextView)findViewById(R.id.gameState);
-        playAgain = (Button)findViewById(R.id.playAgain);
-        quit = (Button)findViewById(R.id.quit);
-        probsDone = 0;
-        c1 = (TextView)findViewById(R.id.c1);
-        c2 = (TextView)findViewById(R.id.c2);
-        c3 = (TextView)findViewById(R.id.c3);
-        c4 = (TextView)findViewById(R.id.c4);
-
-        final TextView timer = (TextView)findViewById(R.id.timer);
-        clock = new CountDownTimer(startingMillis+100, 1000) { //+100 to fix the delay
-
-            @Override
-            public void onTick(long l) {
-                timer.setText(Long.toString(l/1000) + "s");
-                //You're going down to the proper number of seconds because of how l/1000 rounds down.
-            }
-
-            @Override
-            public void onFinish() {
-                timer.setText("0s");
-                gameActive = false;
-                gameState.setText("TIME UP");
-                displayResult();
-            }
-
-        }.start();
-        progress.setText(Integer.toString(probsDone) + "/" + Integer.toString(totalProbs));
-        genNewProblem();
-    }
-
-
     /**
      * Generates a new problem to be displayed
      */
@@ -127,6 +116,9 @@ public class MainActivity extends AppCompatActivity {
         answer = o1+o2;
         int candAnsRadius = 3;
 
+        //Instead of shuffling ArrayList elements like you do here, you could choose a random index value and run a for
+        //loop where for each iteration, if the loop control variable equals the random index, then you add the correct
+        //answer to candAnswers. Else, you generate a random answer.
         candAnswers = genCandAnswers(answer, candAnsRadius);
         long seed = System.nanoTime();
         Collections.shuffle(candAnswers, new Random(seed));
@@ -171,6 +163,3 @@ public class MainActivity extends AppCompatActivity {
         playAgain.setVisibility(View.VISIBLE); quit.setVisibility(View.VISIBLE);
     }
 }
-
-
-
